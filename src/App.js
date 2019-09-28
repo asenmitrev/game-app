@@ -81,6 +81,7 @@ class App extends Component {
 
     this.nextTurn = this.nextTurn.bind(this);
     this.cardSpawn = this.cardSpawn.bind(this);
+    this.rerender = this.cardSpawn.bind(this);
     this.cardSpawn(1,"human")
     this.cardSpawn(1,"computer")
     this.cardSpawn(2,"human")
@@ -93,13 +94,18 @@ class App extends Component {
     if(this.generator.next().value == "finish"){
       this.generator = generatorTurn(this.cards)
     }
+    this.rerender();
   }
   
   cardSpawn(position,team){
     this.cards.push(new Card(this.cards,position,team))
   }
 
-
+  rerender(){
+    this.setState(() =>{return {
+      cards:this.cards
+    }})
+  }
 
 
 
@@ -108,7 +114,7 @@ class App extends Component {
       const enemyCards = [];
 
       const myCards = [];
-
+      console.log(this.state)
       return (
 
         <div className="row">
