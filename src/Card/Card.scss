@@ -62,6 +62,7 @@ h1, h2, h3, h4, h5 {
     font-size: 1.5em;    
     font-weight: 700;
     letter-spacing: 0.02em;
+    text-transform: capitalize;
   }
   
   &__stats {
@@ -166,7 +167,7 @@ h1, h2, h3, h4, h5 {
   @for $i from 1 through 9 {
     &:nth-child(#{$i}) {
       $rotation: (5 - random(10)) + deg;
-      transform: translateY(0px) rotate($rotation);      
+      transform: translateY(0px) rotate($rotation);       
     }
   }
 
