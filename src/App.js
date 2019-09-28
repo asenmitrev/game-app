@@ -75,6 +75,7 @@ class Card {
 
   deathCheck(){
     if(this.hp <= 0){
+      this.logger.push(`${this.name} died`)
       this.death();
     }
   }
@@ -111,6 +112,10 @@ class App extends Component {
   }
 
   nextTurn(){
+    this.cards.sort((a, b) => {
+      return b.initiative-a.initiative;
+    })
+    
     if(this.generator.next().value == "finish"){
       this.generator = generatorTurn(this.cards)
     }
