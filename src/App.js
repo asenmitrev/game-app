@@ -58,16 +58,17 @@ class Card {
     }
 
     let enemy = this.family.find((element) =>{
-      return element.position == this.position && element.team == enemyTeam
+      return  element.team == enemyTeam && element.alive
     })
 
-    if(enemy){
+    if(enemy && this.alive){
       this.attack(enemy);
     }
   }
 
   attack(enemy){
     this.logger.push(`${this.name} attacked ${enemy.name} for ${this.power} damage`)
+    
     enemy.hp -= this.power;
     enemy.deathCheck();
   }
@@ -132,7 +133,7 @@ class App extends Component {
 
     const myCards = this.state.cards.filter(c => c.team === 'human').map(card => (<CardTemplate key={card.id} className="col-xs-4" card={card}></CardTemplate>));
 
-    const eventLog = ['Somebody hit somebody', 'You died'].map(log => (<EventLog key={log} log={log} />))
+    const eventLog = this.state.logger.map(log => (<EventLog key={log} log={log} />))
     return (
       <div className="app">
         <div className="row">
