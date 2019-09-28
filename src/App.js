@@ -113,16 +113,17 @@ class App extends Component {
 
 
   render() {
-    const enemyCards = [1,2,3].map(card => (<CardTemplate key={card} className="col-xs-4" card={card}></CardTemplate>));
+    console.log(this.state.cards)
+    const enemyCards = this.state.cards.filter(c => c.team === 'computer').map(card => (<CardTemplate key={card.id} className="col-xs-4" card={card}></CardTemplate>));
 
-    const myCards = [1,2,3].map(card => (<CardTemplate key={card} className="col-xs-4" card={card}></CardTemplate>));
+    const myCards = this.state.cards.filter(c => c.team === 'human').map(card => (<CardTemplate key={card.id} className="col-xs-4" card={card}></CardTemplate>));
 
     const eventLog = ['Somebody hit somebody', 'You died'].map(log => (<EventLog key={log} log={log} />))
     return (
       <div className="app">
         <div className="row">
           <div className="col-xs-8">
-            <div className="row between-xs middle-xs margin-bottom__medium"><h1>THE BATTLEFIELD</h1> <button className="fight-btn" onClick={this.nextTurn}>FIGHT</button></div>
+            <div className="row between-xs middle-xs margin-bottom__medium"><h1>THE BATTLEFIELD</h1> <button className="fight-btn" onClick={this.nextTurn.bind(this)}>FIGHT</button></div>
             <div className="row margin-bottom__default"><h2>The Enemy's cards</h2></div>
             <div className="row margin-bottom__medium">
               {enemyCards}

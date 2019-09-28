@@ -90,7 +90,9 @@ h1, h2, h3, h4, h5 {
   }
   
   box-shadow: 0px 5px 20px -10px #111111;
-  
+  &--dead {
+    filter: grayscale(100%);
+  }
   
   &--normal {
     background: linear-gradient(110deg, #FDBB2D 0%, #3A1C71 100%);

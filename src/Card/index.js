@@ -1,15 +1,16 @@
 import React from 'react';
 import './Card.scss';
 
-export default function Card({ className }) {
+export default function Card({ className, card }) {
+    const {hp, initiative, power, alive} = card;
     // const types = ['fairy', 'ice', 'grass', 'dark', 'psychic', 'fire', 'electric', 'water', 'normal'];
     const types = ['grass', 'dark', 'fire', 'water', 'psychic', 'electric'];
     
     const cardVisualType = getRandomArrayElement(types);
     const imageNr = getRandomArrayElement([1,2,3,4]);
-
+console.log(alive)
     return (
-        <figure className={`card card--${cardVisualType} + ${className}`}>
+        <figure className={`card card--${cardVisualType} + ${className} ${alive ? '' : 'card--dead'}`}>
             <div className="card__image-container">
                 <img src={`${process.env.PUBLIC_URL}/img/${cardVisualType}/${cardVisualType}${imageNr}.jpg`} alt="Eevee" className="card__image" />   
             </div>
@@ -25,11 +26,15 @@ export default function Card({ className }) {
                     <tbody>
                         <tr>
                             <th>HP</th>
-                            <td>55</td>
+                            <td>{hp}</td>
                         </tr>
                         <tr>
-                            <th>Attack</th>
-                            <td>55</td>
+                            <th>Power</th>
+                            <td>{power}</td>
+                        </tr>
+                        <tr>
+                            <th>Initiative</th>
+                            <td>{initiative}</td>
                         </tr>
                     </tbody>
                 </table>
