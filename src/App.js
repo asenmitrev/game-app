@@ -109,6 +109,7 @@ class App extends Component {
     this.cardSpawn(2,"computer")
     this.cardSpawn(3,"human")
     this.cardSpawn(3,"computer")
+    this.rerender();
   }
 
   nextTurn(){
