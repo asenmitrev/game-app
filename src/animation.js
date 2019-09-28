@@ -26,7 +26,7 @@ export function flyToPos(element, start, end, duration) {
         } else {
             setTimeout(() => {
                 element.style.display = 'none';
-            }, 500);
+            }, 300);
         }
     };
     animateScroll();

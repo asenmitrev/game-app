@@ -3,9 +3,11 @@ import './Card.scss';
 
 export default function Card({ className, card }) {
     const {hp, initiative, power, alive, type, imageNr, name} = card;
+    const ref = React.createRef();
+    card.ref = ref;
     // const types = ['fairy', 'ice', 'grass', 'dark', 'psychic', 'fire', 'electric', 'water', 'normal'];
     return (
-        <figure className={`card card--${type} + ${className} ${alive ? '' : 'card--dead'}`}>
+        <figure className={`card card--${type} + ${className} ${alive ? '' : 'card--dead'}`} ref={ref}>
             <div className="card__image-container">
                 <img src={`${process.env.PUBLIC_URL}/img/${type}/${type}${imageNr}.jpg`} alt="Eevee" className="card__image" />   
             </div>
