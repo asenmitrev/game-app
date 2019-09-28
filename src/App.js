@@ -22,11 +22,12 @@ class Card {
   initiative = 10;
   alive = true;
   team;
-
+  id;
   constructor(cardArray,position,team){
     this.family = cardArray;
     this.position = position;
     this.team = team;
+    this.id ='id' + (new Date()).getTime();
   }
 
 
@@ -117,6 +118,7 @@ class App extends Component {
       return (
 
         <div className="row">
+          <p>{this.cards[0].hp}</p>
           <button onClick={this.nextTurn}>Next TUrn</button>
 
           <div className="col-xs-8">
