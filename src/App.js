@@ -25,17 +25,19 @@ const types = ['grass', 'dark', 'fire', 'water', 'psychic', 'electric'];
 const names = ["ninja", "chair", "pancake", "statue", "unicorn", "rainbows", "laser", "senor", "bunny", "captain", "nibblets", "cupcake", "carrot", "gnomes", "glitter", "potato", "salad", "toejam", "curtains", "beets", "toilet", "exorcism", "stick figures", "mermaid eggs", "sea barnacles", "dragons", "jellybeans", "snakes", "dolls", "bushes", "cookies", "apples", "ice cream", "ukulele", "kazoo", "banjo", "opera singer", "circus", "trampoline", "carousel", "carnival", "locomotive", "hot air balloon", "praying mantis", "animator", "artisan", "artist", "colorist", "inker", "coppersmith", "director", "designer", "flatter", "stylist", "leadman", "limner", "make-up artist", "model", "musician", "penciller", "producer", "scenographer", "set decorator", "silversmith", "teacher", "auto mechanic", "beader", "bobbin boy", "clerk of the chapel", "filling station attendant", "foreman", "maintenance engineering", "mechanic", "miller", "moldmaker", "panel beater", "patternmaker", "plant operator", "plumber", "sawfiler", "shop foreman", "soaper", "stationary engineer", "wheelwright", "woodworkers"];
 class Card {
   family=[];
-  hp=10;
-  power = 5;
+  hp=Math.floor(Math.random() * 100); 
+  power =Math.floor(Math.random() * 11); 
   position =0;
-  initiative = 10;
+  initiative = Math.floor(Math.random() * 1000); ;
   alive = true;
   team;
   id;
-  constructor(cardArray,position,team){
+  logger;
+  constructor(cardArray,position,team,logger){
     this.family = cardArray;
     this.position = position;
     this.team = team;
+    this.logger = logger;
     this.id ='id' + Math.random();
     
     this.type = getRandomArrayElement(types);
@@ -56,21 +58,24 @@ class Card {
     }
 
     let enemy = this.family.find((element) =>{
-      return element.position == this.position && element.team == enemyTeam
+      return  element.team == enemyTeam && element.alive
     })
 
-    if(enemy){
+    if(enemy && this.alive){
       this.attack(enemy);
     }
   }
 
   attack(enemy){
+    this.logger.push(`${this.name} attacked ${enemy.name} for ${this.power} damage`)
+    
     enemy.hp -= this.power;
     enemy.deathCheck();
   }
 
   deathCheck(){
     if(this.hp <= 0){
+      this.logger.push(`${this.name} died`)
       this.death();
     }
   }
@@ -86,10 +91,12 @@ class Card {
 class App extends Component {
   cards = [];
   generator;
+  logger = [];
   constructor(){
     super()
     this.state = {
-      cards:this.cards
+      cards:this.cards,
+      logger:this.logger
     }
     this.generator = generatorTurn(this.cards);
 
@@ -105,31 +112,33 @@ class App extends Component {
   }
 
   nextTurn(){
+    this.cards.sort((a, b) => {
+      return b.initiative-a.initiative;
+    })
+    
     if(this.generator.next().value == "finish"){
       this.generator = generatorTurn(this.cards)
     }
-    console.log(this.cards)
     this.rerender();
   }
   
   cardSpawn(position,team){
-    this.cards.push(new Card(this.cards,position,team))
+    this.cards.push(new Card(this.cards,position,team,this.logger))
   }
 
   rerender(){
-    this.setState({cards:this.cards})
+    this.setState({cards:this.cards,logger:this.logger})
   }
 
 
 
 
   render() {
-    console.log(this.state.cards)
     const enemyCards = this.state.cards.filter(c => c.team === 'computer').map(card => (<CardTemplate key={card.id} className="col-xs-4" card={card}></CardTemplate>));
 
     const myCards = this.state.cards.filter(c => c.team === 'human').map(card => (<CardTemplate key={card.id} className="col-xs-4" card={card}></CardTemplate>));
 
-    const eventLog = ['Somebody hit somebody', 'You died'].map(log => (<EventLog key={log} log={log} />))
+    const eventLog = this.state.logger.map(log => (<EventLog key={log} log={log} />))
     return (
       <div className="app">
         <div className="row">
