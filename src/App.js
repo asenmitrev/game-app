@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import EventLog from './EventLog';
 import CardTemplate from './Card';
+import { flyToPos} from './animation';
 import './App.css';
 
 
@@ -16,6 +17,12 @@ const generatorTurn = function *(array) {
 
 }
 
+function getCardCoords(element) {
+
+  let centerX = element.offsetLeft + element.offsetWidth / 2;
+      let centerY = element.offsetTop + element.offsetHeight / 2;
+      return {x: centerX, y: centerY};
+}
 
 function getRandomArrayElement(arr) {
     return arr[Math.floor(Math.random()*arr.length)]
@@ -58,7 +65,7 @@ class Card {
     }
 
     let enemy = this.family.find((element) =>{
-      return  element.team == enemyTeam && element.alive
+      return  element.team === enemyTeam && element.alive
     })
 
     if(enemy && this.alive){
@@ -67,7 +74,7 @@ class Card {
   }
 
   attack(enemy){
-    this.logger.push(`${this.name} attacked ${enemy.name} for ${this.power} damage`)
+    this.logger.push({ id: Math.random(), text: `${this.name} attacked ${enemy.name} for ${this.power} damage`, attacker: this, defender: enemy})
     
     enemy.hp -= this.power;
     enemy.deathCheck();
@@ -103,27 +110,32 @@ class App extends Component {
     this.nextTurn = this.nextTurn.bind(this);
     this.cardSpawn = this.cardSpawn.bind(this);
     this.rerender = this.rerender.bind(this);
-    this.cardSpawn(1,"human")
-    this.cardSpawn(1,"computer")
-    this.cardSpawn(2,"human")
-    this.cardSpawn(2,"computer")
-    this.cardSpawn(3,"human")
-    this.cardSpawn(3,"computer")
+    this.cardSpawnRandom(1,"human")
+    this.cardSpawnRandom(1,"computer")
+    this.cardSpawnRandom(2,"human")
+    this.cardSpawnRandom(2,"computer")
+    this.cardSpawnRandom(3,"human")
+    this.cardSpawnRandom(3,"computer")
     this.rerender();
-  }
 
-  nextTurn(){
+    this.attack = React.createRef();
+
     this.cards.sort((a, b) => {
       return b.initiative-a.initiative;
     })
+  }
+
+  nextTurn(){
+
     
-    if(this.generator.next().value == "finish"){
+    if(this.generator.next().value === "finish"){
       this.generator = generatorTurn(this.cards)
     }
     this.rerender();
   }
   
-  cardSpawn(position,team){
+  cardSpawnRandom(position,team){
+    
     this.cards.push(new Card(this.cards,position,team,this.logger))
   }
 
@@ -139,7 +151,17 @@ class App extends Component {
 
     const myCards = this.state.cards.filter(c => c.team === 'human').map(card => (<CardTemplate key={card.id} className="col-xs-4" card={card}></CardTemplate>));
 
-    const eventLog = this.state.logger.map(log => (<EventLog key={log} log={log} />))
+    const eventLog = this.state.logger.map(log => (<EventLog key={log.id} log={log.text} />));
+
+    setTimeout(() => {
+      if(this.state.logger.length === 0) return;
+      const {attacker, defender } = this.state.logger[this.state.logger.length - 1];
+      if(!attacker || !defender) return;
+      // console.log(this.attack.current, attacker)
+      console.log(getCardCoords(attacker.ref.current), getCardCoords(defender.ref.current))
+      flyToPos(this.attack.current, getCardCoords(attacker.ref.current), getCardCoords(defender.ref.current), 1000);
+    });
+
     return (
       <div className="app">
         <div className="row">
@@ -153,10 +175,11 @@ class App extends Component {
             <div className="row margin-bottom__medium">
               {myCards}
             </div>
+            <div id="attack" className="attack" style={{display: 'none'}} ref={this.attack}> <img src={`${process.env.PUBLIC_URL}/img/attack.png`} alt="FIRE"/></div>
           </div>
           <div className="col-xs-4">
           <button className="fight-btn" onClick={this.nextTurn.bind(this)}>FIGHT</button>
-            <h1>Event Log:</h1>
+            <h1 className="margin-bottom__medium">Event Log:</h1>
             {eventLog}
 
           </div>

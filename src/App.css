@@ -11,3 +11,15 @@
   color: white;
   background: #fcc245;
 }
+.attack {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  top: 0;
+  left: 0;
+  transform: translateX(-50%) translateY(-50%);
+}
+.attack img {
+  max-height: 100%;
+  max-width: 100%;
+}
