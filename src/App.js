@@ -143,6 +143,7 @@ class App extends Component {
             <div className="row margin-bottom__medium">
               {myCards}
             </div>
+            <div id="attack" fclassName="attack" style={{display: 'none'}}>ATTACK</div>
           </div>
           <div className="col-xs-4">
           <button className="fight-btn" onClick={this.nextTurn.bind(this)}>FIGHT</button>

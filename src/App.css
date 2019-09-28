@@ -11,3 +11,8 @@
   color: white;
   background: #fcc245;
 }
+.attack {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

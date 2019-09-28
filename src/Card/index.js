@@ -11,7 +11,7 @@ export default function Card({ className, card }) {
             </div>
         
             <figcaption className="card__caption">
-                {<h1 class="card__name">{name}</h1>}
+                <h1 className="card__name">{name}</h1>
 
                 <h3 className="card__type">
                     {type}
@@ -47,8 +47,4 @@ export default function Card({ className, card }) {
             </figcaption>
         </figure>
     )
-}
-
-function getRandomArrayElement(arr) {
-    return arr[Math.floor(Math.random()*arr.length)]
 }
