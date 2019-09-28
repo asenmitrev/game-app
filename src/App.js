@@ -1,26 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  render() {
+      const enemyCards = [];
+
+      const myCards = [];
+
+      return (
+        <div className="row">
+          <div className="col-xs-8">
+            <div className="row"><h1>THE BATTLEFIELD</h1></div>
+            <div className="row"><h2>The Enemy's cards</h2></div>
+          </div>
+          <div className="col-xs-4"></div>
+        </div>
+      );
+  }
 }
 
 export default App;
