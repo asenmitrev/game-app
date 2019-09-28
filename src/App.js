@@ -81,7 +81,7 @@ class App extends Component {
 
     this.nextTurn = this.nextTurn.bind(this);
     this.cardSpawn = this.cardSpawn.bind(this);
-    this.rerender = this.cardSpawn.bind(this);
+    this.rerender = this.rerender.bind(this);
     this.cardSpawn(1,"human")
     this.cardSpawn(1,"computer")
     this.cardSpawn(2,"human")
@@ -94,6 +94,7 @@ class App extends Component {
     if(this.generator.next().value == "finish"){
       this.generator = generatorTurn(this.cards)
     }
+    console.log(this.cards)
     this.rerender();
   }
   
@@ -102,9 +103,7 @@ class App extends Component {
   }
 
   rerender(){
-    this.setState(() =>{return {
-      cards:this.cards
-    }})
+    this.setState({cards:this.cards})
   }
 
 
