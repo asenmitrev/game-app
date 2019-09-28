@@ -8,7 +8,6 @@ export default function Card({ className, card }) {
     
     const cardVisualType = getRandomArrayElement(types);
     const imageNr = getRandomArrayElement([1,2,3,4]);
-console.log(alive)
     return (
         <figure className={`card card--${cardVisualType} + ${className} ${alive ? '' : 'card--dead'}`}>
             <div className="card__image-container">

@@ -18,10 +18,10 @@ const generatorTurn = function *(array) {
 
 class Card {
   family=[];
-  hp=10;
-  power = 5;
+  hp=Math.floor(Math.random() * 100); 
+  power =Math.floor(Math.random() * 11); 
   position =0;
-  initiative = 10;
+  initiative = Math.floor(Math.random() * 1000); ;
   alive = true;
   team;
   id;
@@ -75,10 +75,12 @@ class Card {
 class App extends Component {
   cards = [];
   generator;
+  logger = [];
   constructor(){
     super()
     this.state = {
-      cards:this.cards
+      cards:this.cards,
+      logger:this.logger
     }
     this.generator = generatorTurn(this.cards);
 
@@ -106,7 +108,7 @@ class App extends Component {
   }
 
   rerender(){
-    this.setState({cards:this.cards})
+    this.setState({cards:this.cards,logger:this.logger})
   }
 
 
