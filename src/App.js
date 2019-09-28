@@ -32,10 +32,12 @@ class Card {
   alive = true;
   team;
   id;
-  constructor(cardArray,position,team){
+  logger;
+  constructor(cardArray,position,team,logger){
     this.family = cardArray;
     this.position = position;
     this.team = team;
+    this.logger = logger;
     this.id ='id' + Math.random();
     
     this.type = getRandomArrayElement(types);
@@ -65,6 +67,7 @@ class Card {
   }
 
   attack(enemy){
+    this.logger.push(`${this.name} attacked ${enemy.name} for ${this.power} damage`)
     enemy.hp -= this.power;
     enemy.deathCheck();
   }
@@ -110,12 +113,11 @@ class App extends Component {
     if(this.generator.next().value == "finish"){
       this.generator = generatorTurn(this.cards)
     }
-    console.log(this.cards)
     this.rerender();
   }
   
   cardSpawn(position,team){
-    this.cards.push(new Card(this.cards,position,team))
+    this.cards.push(new Card(this.cards,position,team,this.logger))
   }
 
   rerender(){
@@ -126,7 +128,6 @@ class App extends Component {
 
 
   render() {
-    console.log(this.state.cards)
     const enemyCards = this.state.cards.filter(c => c.team === 'computer').map(card => (<CardTemplate key={card.id} className="col-xs-4" card={card}></CardTemplate>));
 
     const myCards = this.state.cards.filter(c => c.team === 'human').map(card => (<CardTemplate key={card.id} className="col-xs-4" card={card}></CardTemplate>));
