@@ -3,7 +3,6 @@ import EventLog from './EventLog';
 import CardTemplate from './Card';
 import { flyToPos} from './animation';
 import './App.css';
-import { bigIntLiteral } from '@babel/types';
 
 
 const generatorTurn = function *(array) {
@@ -19,6 +18,25 @@ const generatorTurn = function *(array) {
 
       yield "finish"
   }
+}
+
+const explainAttacks = function(attack){
+  switch(attack){
+    case 'normal':
+      return 'Normal'
+      break;
+    case 'pierceArmor':
+      return "Ignores Armor"
+    break;
+    case 'massDamage':
+      return "Damages All Enemies"
+      break;
+    case 'lightAttack':
+      return "Twice as weak against armor"
+      break;
+  }
+
+  return ''
 }
 
 const giveSpecial = function(card,points){
@@ -290,11 +308,11 @@ class Card {
   team;
   id;
   logger;
-  armor = 0;
+  armor = 0; 
   attackSpecial = 'normal'
+  attackText = '';
   modifier = 0;
   constructor(cardArray,position,team,logger){
-
 
     this.family = cardArray;
     this.position = position;
@@ -306,6 +324,9 @@ class Card {
     this.imageNr = getRandomArrayElement([1,2,3,4]);
     this.name = getRandomArrayElement(names);
     distributePoints(this);
+
+    this.attackText = explainAttacks(this.attackSpecial);
+
 
   }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import './Card.scss';
 
 export default function Card({ className, card }) {
-    const {hp, initiative, power, alive, type, imageNr, name, armor,attackSpecial} = card;
+    const {hp, initiative, power, alive, type, imageNr, name, armor,attackText} = card;
     const ref = React.createRef();
     card.ref = ref;
     // const types = ['fairy', 'ice', 'grass', 'dark', 'psychic', 'fire', 'electric', 'water', 'normal'];
@@ -39,7 +39,7 @@ export default function Card({ className, card }) {
                         </tr>
                         <tr>
                             <th>Attack</th>
-                            <td>{attackSpecial}</td>
+                            <td>{attackText}</td> 
                         </tr>
                     </tbody>
                 </table>
