@@ -3,18 +3,268 @@ import EventLog from './EventLog';
 import CardTemplate from './Card';
 import { flyToPos} from './animation';
 import './App.css';
+import { bigIntLiteral } from '@babel/types';
 
 
 const generatorTurn = function *(array) {
   if(array){
       for (var item of array) {
-          yield item.turn();
-        
+          if(item.alive){
+            yield item.turn();
+          }
+          else{
+
+          }
       }
 
       yield "finish"
   }
+}
 
+const giveSpecial = function(card,points){
+  if(card.attackSpecial != 'normal'){
+    return points
+  }
+  let whileCheck = true;
+  while(whileCheck){
+    switch(Math.floor(Math.random() * 3)) {
+      case 0:
+          if(points>=100){
+            card.attackSpecial = 'pierceArmor'
+            whileCheck = false;
+            return points-100;
+          }
+        break;
+      case 1:
+          if(points>=150){
+            card.attackSpecial = 'massDamage'
+            whileCheck = false;
+            return points-150;
+          }
+          break;
+
+      case 2:
+            card.attackSpecial = 'lightAttack'
+            whileCheck = false;
+            return points+80;
+          break;
+    }
+  }
+
+}
+
+const distributePoints = function(card){
+  let points = 300
+  if(card.type == 'water'){
+    while(points > 0){
+      switch(Math.floor(Math.random() * 4)) {
+        case 0:
+              if(points-1>=0){
+                card.hp+=1;
+                points-=1;
+              }
+            break;
+  
+        case 1:
+              if(points-1>=0){
+                card.initiative+=2;
+                points-=1;
+              }
+            break;
+  
+        case 2:
+              if(points-5>=0){
+                card.power+=1;
+                points-=5;
+              }
+            break;
+  
+        case 3:
+            if(points-20>=0){
+              card.armor+=1;
+              points-=20;
+            }
+          break;
+      }
+    }
+  }
+
+  else if(card.type == 'dark'){
+    while(points > 0){
+      switch(Math.floor(Math.random() * 4)) {
+        case 0:
+              if(points-5>=0){
+                card.power+=1;
+                points-=5;
+              }
+            break;
+        case 1:
+            if(points-20>=0){
+              card.armor+=1;
+              points-=20;
+            }
+            break;
+        case 2:
+            if(points-1>=0){
+              card.hp+=1;
+              points-=1;
+            }
+            break;
+        case 3:
+          points = giveSpecial(card,points)
+          break
+      }
+    }
+  }
+
+  else if(card.type == 'fire'){
+    while(points > 0){
+      switch(Math.floor(Math.random() * 6)) {
+        case 0:
+        case 1:
+              if(points-5>=0){
+                card.power+=1;
+                points-=5;
+              }
+            break;
+        case 2:
+        case 3:
+            if(points-1>=0){
+              card.hp+=1;
+              points-=1;
+            }
+            break;
+
+        case 4:
+            if(points-1>=0){
+              card.initiative+=2;
+              points-=1;
+            }
+          break;
+        case 5:
+          points = giveSpecial(card,points);
+          break;
+
+      }
+    }
+  }
+
+  else if(card.type == 'electric'){
+    while(points > 0){
+      switch(Math.floor(Math.random() * 7)) {
+        case 6:
+            points = giveSpecial(card,points);
+            break;
+        case 0:
+              if(points-1>=0){
+                card.hp+=1;
+                points-=1;
+              }
+            break;
+  
+        case 1:
+              if(points-1>=0){
+                card.initiative+=2;
+                points-=1;
+              }
+            break;
+  
+        
+        case 4:
+        case 5:
+              if(points-5>=0){
+                card.power+=1;
+                points-=5;
+              }
+            break;
+              
+        case 2:
+        case 3:
+            if(points-20>=0){
+              card.armor+=1;
+              points-=20;
+            }
+            break;
+      }
+    }
+  }
+
+  else if(card.type == 'grass'){
+    while(points > 0){
+      switch(Math.floor(Math.random() * 7)) {
+        case 4:
+        case 5:
+        case 0:
+              if(points-1>=0){
+                card.hp+=1;
+                points-=1;
+              }
+            break;
+        case 1:
+              if(points-1>=0){
+                card.initiative+=2;
+                points-=1;
+              }
+            break;
+        case 2:
+              if(points-5>=0){
+                card.power+=1;
+                points-=5;
+              }
+            break;
+        case 3:
+            if(points-20>=0){
+              card.armor+=1;
+              points-=20;
+            }
+            break;
+        case 6:
+          points = giveSpecial(card,points);
+          break;
+      }
+    }
+  }
+  else if(card.type == 'psychic'){
+    while(points > 0){
+      switch(Math.floor(Math.random() * 8)) {
+        case 7:
+        case 6:
+          points =giveSpecial(card,points);
+          break;
+        case 0:
+        case 1:
+              if(points-1>=0){
+                card.hp+=1;
+                points-=1;
+              }
+            break;
+        
+        case 2:
+              if(points-1>=0){
+                card.initiative+=2;
+                points-=1;
+              }
+            break;
+        case 3:
+        case 4:
+
+            if(points-20>=0){
+              card.armor+=1;
+              points-=20;
+            }
+            break;
+  
+        case 5:
+            if(points-5>=0){
+              card.power+=1;
+              points-=5;
+            }
+          break;
+      }
+    }
+ 
+  }
+  return card
 }
 
 function getCardCoords(element) {
@@ -32,15 +282,20 @@ const types = ['grass', 'dark', 'fire', 'water', 'psychic', 'electric'];
 const names = ["ninja", "chair", "pancake", "statue", "unicorn", "rainbows", "laser", "senor", "bunny", "captain", "nibblets", "cupcake", "carrot", "gnomes", "glitter", "potato", "salad", "toejam", "curtains", "beets", "toilet", "exorcism", "stick figures", "mermaid eggs", "sea barnacles", "dragons", "jellybeans", "snakes", "dolls", "bushes", "cookies", "apples", "ice cream", "ukulele", "kazoo", "banjo", "opera singer", "circus", "trampoline", "carousel", "carnival", "locomotive", "hot air balloon", "praying mantis", "animator", "artisan", "artist", "colorist", "inker", "coppersmith", "director", "designer", "flatter", "stylist", "leadman", "limner", "make-up artist", "model", "musician", "penciller", "producer", "scenographer", "set decorator", "silversmith", "teacher", "auto mechanic", "beader", "bobbin boy", "clerk of the chapel", "filling station attendant", "foreman", "maintenance engineering", "mechanic", "miller", "moldmaker", "panel beater", "patternmaker", "plant operator", "plumber", "sawfiler", "shop foreman", "soaper", "stationary engineer", "wheelwright", "woodworkers"];
 class Card {
   family=[];
-  hp=Math.floor(Math.random() * 100); 
-  power =Math.floor(Math.random() * 11); 
+  hp=1;
+  power =0; 
   position =0;
-  initiative = Math.floor(Math.random() * 1000); ;
+  initiative = 0 ;
   alive = true;
   team;
   id;
   logger;
+  armor = 0;
+  attackSpecial = 'normal'
+  modifier = 0;
   constructor(cardArray,position,team,logger){
+
+
     this.family = cardArray;
     this.position = position;
     this.team = team;
@@ -50,6 +305,8 @@ class Card {
     this.type = getRandomArrayElement(types);
     this.imageNr = getRandomArrayElement([1,2,3,4]);
     this.name = getRandomArrayElement(names);
+    distributePoints(this);
+
   }
 
 
@@ -64,20 +321,57 @@ class Card {
       enemyTeam = "human";
     }
 
-    let enemy = this.family.find((element) =>{
-      return  element.team === enemyTeam && element.alive
-    })
-
-    if(enemy && this.alive){
-      this.attack(enemy);
+    if(this.alive){
+      if(this.attackSpecial == "massDamage"){
+        this.family.forEach((element) => {
+          if(element.team === enemyTeam){
+            this.attack(element)
+          }
+        })
+      }
+      else{
+        let enemy = this.family.find((element) =>{
+          return  element.team === enemyTeam && element.alive
+        })
+    
+        if(enemy){
+          this.attack(enemy)
+        }
+      }
     }
+
+
+
   }
 
   attack(enemy){
-    this.logger.push({ id: Math.random(), text: `${this.name} attacked ${enemy.name} for ${this.power} damage`, attacker: this, defender: enemy})
-    
-    enemy.hp -= this.power;
+    let power;
+
+    if(this.attackSpecial != 'pierceArmor' && this.attackSpecial != 'lightAttack'){
+      if((this.power - enemy.armor) > 0){
+        power = this.power - enemy.armor
+      }
+      else{
+        power = 0;
+      }
+    }
+    else if(this.attackSpecial =='lightAttack'){
+      if((this.power - enemy.armor*2) > 0){
+        power = this.power - enemy.armor*2
+      }
+      else{
+        power = 0;
+      }    
+    }
+    else if(this.attackSpecial =='pierceArmor'){
+      power = this.power;
+    }
+
+    this.logger.push({ id: Math.random(), text: `${this.name} attacked ${enemy.name} for ${power} damage`, attacker: this, defender: enemy})
+
+    enemy.hp -= power;
     enemy.deathCheck();
+
   }
 
   deathCheck(){
